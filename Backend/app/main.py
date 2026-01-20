@@ -1,13 +1,16 @@
 from fastapi import FastAPI
+from . import models
+from .database import engine
 
-# Creamos la aplicación
+# --- ¡ESTA ES LA MAGIA! ---
+# Esto le dice a la base de datos: "Si no existe la tabla 'tasks', créala ahora mismo"
+models.Base.metadata.create_all(bind=engine)
+
 app = FastAPI(
     title="ISP-Sync Kanban API",
-    description="API para la gestión de tareas de Wilcom (Planta, Atención, DC)",
     version="0.1.0"
 )
 
-# Ruta de prueba (para ver si funciona)
 @app.get("/")
 def read_root():
-    return {"mensaje": "Bienvenido al Backend de ISP-Sync", "estado": "funcionando"}
+    return {"mensaje": "Backend conectado a PostgreSQL correctamente 🚀"}
