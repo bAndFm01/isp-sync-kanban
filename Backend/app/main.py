@@ -50,3 +50,41 @@ def read_tasks(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     # limit(limit): traer máximo 100 (para no colapsar si hay miles)
     tasks = db.query(models.Task).offset(skip).limit(limit).all()
     return tasks
+
+# RUTA 3: ACTUALIZAR TAREA (PUT)
+# Permite cambiar estado, asignar responsable, etc.
+@app.put("/tasks/{task_id}", response_model=schemas.Task)
+def update_task(task_id: int, task_update: schemas.TaskUpdate, db: Session = Depends(get_db)):
+    
+    # 1. Buscamos la tarea por su ID
+    db_task = db.query(models.Task).filter(models.Task.id == task_id).first()
+    
+    # 2. Si no existe, lanzamos error 404
+    if db_task is None:
+        raise HTTPException(status_code=404, detail="Tarea no encontrada")
+    
+    # 3. Actualizamos solo los campos que envió el usuario
+    # (exclude_unset=True evita borrar datos que no se enviaron)
+    for var, value in task_update.dict(exclude_unset=True).items():
+        setattr(db_task, var, value)
+    
+    # 4. Guardamos cambios
+    db.commit()
+    db.refresh(db_task)
+    return db_task
+
+# RUTA 4: ELIMINAR TAREA (DELETE)
+@app.delete("/tasks/{task_id}")
+def delete_task(task_id: int, db: Session = Depends(get_db)):
+    # 1. Buscamos la tarea
+    db_task = db.query(models.Task).filter(models.Task.id == task_id).first()
+    
+    # 2. Si no existe, error 404
+    if db_task is None:
+        raise HTTPException(status_code=404, detail="Tarea no encontrada")
+    
+    # 3. La borramos y confirmamos cambios
+    db.delete(db_task)
+    db.commit()
+    
+    return {"mensaje": "Tarea eliminada correctamente"}

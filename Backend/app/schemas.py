@@ -2,6 +2,15 @@ from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
 
+# --- NUEVO: Para actualizar tareas (campos opcionales) ---
+class TaskUpdate(BaseModel):
+    title: Optional[str] = None
+    description: Optional[str] = None
+    node: Optional[str] = None
+    priority: Optional[str] = None
+    status: Optional[str] = None
+    responsible_name: Optional[str] = None
+
 # 1. Esquema Base (Lo que tienen en común)
 class TaskBase(BaseModel):
     title: str
