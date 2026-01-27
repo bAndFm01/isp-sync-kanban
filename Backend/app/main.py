@@ -1,11 +1,24 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from . import models, schemas, database
+from fastapi.middleware.cors import CORSMiddleware
 
 # Crear las tablas (esto ya lo tenías)
 models.Base.metadata.create_all(bind=database.engine)
 
 app = FastAPI(title="ISP-Sync Kanban API")
+
+origins = [
+    "http://localhost:5173", # La dirección de tu Frontend React
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"], # Permitir GET, POST, PUT, DELETE
+    allow_headers=["*"],
+)
 
 # Dependencia: Obtener la sesión de la base de datos
 def get_db():

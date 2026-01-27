@@ -1,11 +1,74 @@
+/* Contenedor principal */
 .container {
   padding: 20px;
-  font-family: Arial, sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f0f2f5;
+  min-height: 100vh;
 }
+
 header {
-  background-color: #0078d4; /* Azul tipo Windows */
+  background-color: #0078d4; /* Azul Corporativo */
   color: white;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+/* EL TABLERO (El contenedor de las columnas) */
+.kanban-board {
+  display: flex; /* Esto pone las columnas una al lado de la otra */
+  gap: 20px;
+  align-items: flex-start; /* Alinea las columnas arriba */
+  overflow-x: auto; /* Si hay muchas columnas, permite scroll lateral */
+  padding-bottom: 20px;
+}
+
+/* LAS COLUMNAS */
+.kanban-column {
+  flex: 1; /* Todas las columnas ocupan el mismo ancho */
+  min-width: 300px;
+  background-color: #e4e6eb;
+  border-radius: 10px;
   padding: 15px;
-  border-radius: 5px;
-  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.kanban-column h2 {
+  text-align: center;
+  color: #444;
+  border-bottom: 2px solid #ccc;
+  padding-bottom: 10px;
+  margin-top: 0;
+}
+
+/* LAS TARJETAS */
+.task-card {
+  background-color: white;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  border-left: 5px solid #0078d4; /* Borde de color a la izquierda */
+  transition: transform 0.2s;
+}
+
+.task-card:hover {
+  transform: translateY(-3px); /* Efecto de elevación al pasar el mouse */
+  box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+}
+
+.task-card h3 {
+  margin: 0 0 10px 0;
+  font-size: 1.1rem;
+}
+
+.tag {
+  display: inline-block;
+  background-color: #eee;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  margin-right: 5px;
+  color: #555;
 }
