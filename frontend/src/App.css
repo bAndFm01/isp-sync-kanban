@@ -116,3 +116,30 @@ header {
 .task-form button:hover {
   background-color: #005a9e;
 }
+
+/* ACCIONES DE LA TARJETA */
+.card-actions {
+  display: flex;
+  justify-content: space-between; /* Botones separados */
+  margin-top: 15px;
+  border-top: 1px solid #eee;
+  padding-top: 10px;
+}
+
+.card-actions button {
+  background: none;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 5px 10px;
+  transition: background 0.2s;
+}
+
+.card-actions button:hover {
+  background-color: #f0f0f0;
+}
+
+.card-actions .delete-btn:hover {
+  background-color: #ffebee;
+  border-color: #ffcdd2;
+}

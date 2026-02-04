@@ -101,3 +101,36 @@ def delete_task(task_id: int, db: Session = Depends(get_db)):
     db.commit()
     
     return {"mensaje": "Tarea eliminada correctamente"}
+
+# --- ACTUALIZAR TAREA (PUT) ---
+@app.put("/tasks/{task_id}", response_model=schemas.Task)
+def update_task(task_id: int, task_update: schemas.TaskCreate, db: Session = Depends(get_db)):
+    # 1. Buscamos la tarea
+    db_task = db.query(models.Task).filter(models.Task.id == task_id).first()
+    if db_task is None:
+        raise HTTPException(status_code=404, detail="Tarea no encontrada")
+    
+    # 2. Actualizamos sus datos
+    db_task.title = task_update.title
+    db_task.description = task_update.description
+    db_task.status = task_update.status
+    db_task.priority = task_update.priority
+    db_task.node = task_update.node
+    
+    # 3. Guardamos cambios
+    db.commit()
+    db.refresh(db_task)
+    return db_task
+
+# --- BORRAR TAREA (DELETE) ---
+@app.delete("/tasks/{task_id}")
+def delete_task(task_id: int, db: Session = Depends(get_db)):
+    # 1. Buscamos la tarea
+    db_task = db.query(models.Task).filter(models.Task.id == task_id).first()
+    if db_task is None:
+        raise HTTPException(status_code=404, detail="Tarea no encontrada")
+    
+    # 2. La borramos
+    db.delete(db_task)
+    db.commit()
+    return {"message": "Tarea eliminada exitosamente"}

@@ -61,6 +61,41 @@ function App() {
     return "#79d341"
   }
 
+  // FUNCIÓN PARA BORRAR
+  const handleDelete = async (id) => {
+    if (!confirm("¿Estás seguro de borrar esta tarea?")) return
+    try {
+      await axios.delete(`http://127.0.0.1:8000/tasks/${id}`)
+      // Actualizamos la lista visualmente quitando la tarea borrada
+      setTasks(tasks.filter(task => task.id !== id))
+    } catch (error) {
+      console.error("Error borrando tarea:", error)
+    }
+  }
+
+  // FUNCIÓN PARA MOVER (ACTUALIZAR ESTADO)
+  const handleMove = async (task, direction) => {
+    const currentIndex = COLUMNS.indexOf(task.status)
+    const newIndex = currentIndex + direction
+    
+    // Validar que no se salga de los límites (no ir mas allá de Backlog o Terminado)
+    if (newIndex < 0 || newIndex >= COLUMNS.length) return
+
+    const newStatus = COLUMNS[newIndex]
+    
+    // Creamos el objeto actualizado
+    const updatedTask = { ...task, status: newStatus }
+
+    try {
+      await axios.put(`http://127.0.0.1:8000/tasks/${task.id}`, updatedTask)
+      
+      // Actualizamos la lista visualmente
+      setTasks(tasks.map(t => (t.id === task.id ? updatedTask : t)))
+    } catch (error) {
+      console.error("Error moviendo tarea:", error)
+    }
+  }
+
   return (
     <div className="container">
       <header>
@@ -111,7 +146,23 @@ function App() {
                       {task.priority}
                     </span>
                   </div>
+                <div style={{marginTop: '10px', fontSize: '0.9em', color: '#666'}}>
+                  👤 {task.responsible_name || "Sin asignar"}
                 </div>
+                {/* --- NUEVO: BOTONES DE ACCIÓN --- */}
+                <div className="card-actions">
+                  {/* Botón Mover Izquierda (solo si no es la primera columna) */}
+                  {task.status !== "Backlog" && (
+                    <button onClick={() => handleMove(task, -1)}>⬅️</button>)}
+                  
+                  {/* Botón Borrar */}
+                  <button onClick={() => handleDelete(task.id)} className="delete-btn">🗑️</button>
+
+                  {/* Botón Mover Derecha (solo si no es la última columna) */}
+                  {task.status !== "Terminado" && (
+                    <button onClick={() => handleMove(task, 1)}>➡️</button>)}
+                </div>
+              </div>
               ))}
             </div>
           </div>
