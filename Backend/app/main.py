@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from . import models, schemas, database
 from fastapi.middleware.cors import CORSMiddleware
 
-# Crear las tablas (esto ya lo tenías)
+# Crear las tablas
 models.Base.metadata.create_all(bind=database.engine)
 
 app = FastAPI(title="ISP-Sync Kanban API")
