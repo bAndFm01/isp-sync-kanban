@@ -4,7 +4,7 @@ import './App.css'
 
 function App() {
   const [tasks, setTasks] = useState([])
-  
+
   // 1. ESTADO DEL FORMULARIO: Aquí guardamos lo que el usuario escribe
   const [formData, setFormData] = useState({
     title: '',
@@ -13,6 +13,9 @@ function App() {
     priority: 'Media', // Valor por defecto
     status: 'Backlog'
   })
+
+  // Estado para controlar la edición (Si es null, el modal está cerrado)
+  const [editingTask, setEditingTask] = useState(null)
 
   const COLUMNS = ["Backlog", "En Proceso", "Terminado"]
 
@@ -96,6 +99,35 @@ function App() {
     }
   }
 
+  // A. ABRIR EL MODAL: Carga los datos de la tarjeta en la memoria temporal
+  const startEditing = (task) => {
+    setEditingTask(task)
+  }
+
+  // B. ESCRIBIR EN EL MODAL: Igual que el formulario de crear, pero para editar
+  const handleEditChange = (e) => {
+    const { name, value } = e.target
+    setEditingTask({ ...editingTask, [name]: value })
+  }
+
+  // C. GUARDAR CAMBIOS (PUT):
+  const saveEdit = async (e) => {
+    e.preventDefault()
+    try {
+      // Enviamos los cambios al Backend
+      await axios.put(`http://127.0.0.1:8000/tasks/${editingTask.id}`, editingTask)
+      
+      // Actualizamos la lista visualmente (reemplazamos la vieja por la nueva)
+      setTasks(tasks.map(t => (t.id === editingTask.id ? editingTask : t)))
+      
+      // Cerramos el modal
+      setEditingTask(null)
+    } catch (error) {
+      console.error("Error actualizando tarea:", error)
+      alert("Error al actualizar")
+    }
+  }
+  
   return (
     <div className="container">
       <header>
@@ -151,6 +183,7 @@ function App() {
                 </div>
                 {/* --- NUEVO: BOTONES DE ACCIÓN --- */}
                 <div className="card-actions">
+                  <button onClick={() => startEditing(task)} title="Editar">✏️</button>
                   {/* Botón Mover Izquierda (solo si no es la primera columna) */}
                   {task.status !== "Backlog" && (
                     <button onClick={() => handleMove(task, -1)}>⬅️</button>)}
@@ -168,6 +201,66 @@ function App() {
           </div>
         ))}
       </div>
+      {editingTask && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h3>✏️ Editar Tarea</h3>
+            <form onSubmit={saveEdit} className="task-form" style={{flexDirection: 'column'}}>
+              
+              <label>Título:</label>
+              <input 
+                name="title" value={editingTask.title} onChange={handleEditChange} required 
+              />
+              
+              <label>Descripción:</label>
+              <textarea 
+                name="description" value={editingTask.description} onChange={handleEditChange} rows="3"
+                style={{padding: '10px', borderRadius: '5px', border: '1px solid #ccc', fontFamily: 'sans-serif'}}
+              />
+
+              <div style={{display: 'flex', gap: '10px'}}>
+                <div style={{flex: 1}}>
+                  <label>Encargado:</label>
+                  <input 
+                    name="responsible_name" 
+                    value={editingTask.responsible_name || ''} 
+                    onChange={handleEditChange} 
+                    placeholder="Nombre del técnico"
+                  />
+                </div>
+                <div style={{flex: 1}}>
+                   <label>Nodo:</label>
+                   <input name="node" value={editingTask.node || ''} onChange={handleEditChange} />
+                </div>
+              </div>
+
+              <div style={{display: 'flex', gap: '10px'}}>
+                <div style={{flex: 1}}>
+                   <label>Prioridad:</label>
+                   <select name="priority" value={editingTask.priority} onChange={handleEditChange}>
+                     <option value="Baja">Baja</option>
+                     <option value="Media">Media</option>
+                     <option value="Alta">Alta</option>
+                     <option value="Crítica">Crítica</option>
+                   </select>
+                </div>
+                <div style={{flex: 1}}>
+                   <label>Estado:</label>
+                   <select name="status" value={editingTask.status} onChange={handleEditChange}>
+                     {COLUMNS.map(col => <option key={col} value={col}>{col}</option>)}
+                   </select>
+                </div>
+              </div>
+
+              <div className="modal-actions">
+                <button type="button" onClick={() => setEditingTask(null)} className="btn-cancel">Cancelar</button>
+                <button type="submit" className="btn-save">Guardar Cambios</button>
+              </div>
+
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
