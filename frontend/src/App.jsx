@@ -10,6 +10,7 @@ function App() {
     title: '',
     description: '',
     node: '',
+    responsible_name: '',
     priority: 'Media', // Valor por defecto
     status: 'Backlog'
   })
@@ -147,6 +148,15 @@ function App() {
             type="text" name="description" placeholder="Descripción breve" 
             value={formData.description} onChange={handleInputChange} 
           />
+
+          <input 
+            type="text" 
+            name="responsible_name" 
+            placeholder="Encargado" 
+            value={formData.responsible_name} 
+            onChange={handleInputChange} 
+          />
+
           <input 
             type="text" name="node" placeholder="Nodo / Ubicación" 
             value={formData.node} onChange={handleInputChange} 
