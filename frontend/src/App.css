@@ -4,6 +4,11 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #f0f2f5;
   min-height: 100vh;
+  /* Estas 3 líneas son nuevas/modificadas */
+  height: 100vh;          /* Ocupa toda la altura visible */
+  display: flex;          /* Activa el modo flexible */
+  flex-direction: column; /* Organiza los hijos en columna (uno debajo de otro) */
+  box-sizing: border-box; /* Importante para que el padding no sume tamaño extra */
 }
 
 header {
@@ -19,19 +24,28 @@ header {
 .kanban-board {
   display: flex; /* Esto pone las columnas una al lado de la otra */
   gap: 20px;
+  flex: 1;
   align-items: flex-start; /* Alinea las columnas arriba */
+  height: calc(100vh - 10px);
   overflow-x: auto; /* Si hay muchas columnas, permite scroll lateral */
+  /* CAMBIO CLAVE 2: Ocultar scroll vertical del tablero */
+  overflow-y: hidden; 
   padding-bottom: 20px;
 }
 
 /* LAS COLUMNAS */
 .kanban-column {
   flex: 1; /* Todas las columnas ocupan el mismo ancho */
+  display: flex;
   min-width: 300px;
+  height: 100%;
   background-color: #e4e6eb;
   border-radius: 10px;
   padding: 15px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  max-height: 100%
 }
 
 .kanban-column h2 {
@@ -196,4 +210,14 @@ header {
   padding: 10px 15px;
   border-radius: 5px;
   cursor: pointer;
+}
+
+.column-content {
+  /* Aquí es donde ocurre la magia */
+  /* 1. Ocupar todo el espacio disponible */
+  flex: 1;
+  /* 2. Scroll */
+  overflow-y: auto;
+  /* 3. (Opcional) Padding pequeño para que el scroll no tape el texto */
+  padding: 5px;
 }

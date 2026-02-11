@@ -19,7 +19,7 @@ function App() {
   // Estado para edición
   const [editingTask, setEditingTask] = useState(null)
 
-  const COLUMNS = ["Backlog", "En Proceso", "Terminado"]
+  const COLUMNS = ["Backlog", "En Proceso", "Stand-by", "Terminado"]
 
   useEffect(() => {
     fetchTasks()
