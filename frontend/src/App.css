@@ -86,6 +86,13 @@ header {
   -webkit-line-clamp: 2;   /* ¿Cuántas líneas mostrar? (prueba con 2 o 3) */
   -webkit-box-orient: vertical; /* Orientación vertical */
   overflow: hidden;        /* Esconde lo que sobre */
+  transition: all 0.3s ease; /* para que se abra suave */
+}
+
+/* La regla MÁGICA: Cuando la tarjeta tiene la clase .expanded */
+.task-card.expanded p {
+  -webkit-line-clamp: unset; /* Quita el límite de líneas */
+  display: block; /* Muestra todo el texto */
 }
 
 .tag {

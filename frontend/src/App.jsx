@@ -65,6 +65,18 @@ function App() {
     }
   }
 
+  // Diccionario para saber qué tarjetas están expandidas. 
+  // Ejemplo: { 15: true, 22: false }
+  const [expandedTasks, setExpandedTasks] = useState({});
+
+  // Función para cambiar el estado de una tarjeta específica
+  const toggleTask = (taskId) => {
+    setExpandedTasks(prev => ({
+      ...prev,
+      [taskId]: !prev[taskId] // Si estaba true pasa a false, y viceversa
+    }));
+  }
+
   // --- LÓGICA DRAG AND DROP (NUEVO) ---
   const handleDragEnd = async (result) => {
     const { destination, source, draggableId } = result
@@ -175,7 +187,7 @@ function App() {
                               ref={provided.innerRef}
                               {...provided.draggableProps}
                               {...provided.dragHandleProps}
-                              className="task-card"
+                              className={`task-card ${expandedTasks[task.id] ? 'expanded' : ''}`}
                               style={{ 
                                 ...provided.draggableProps.style, // Estilos necesarios para el movimiento
                                 borderLeftColor: getPriorityColor(task.priority) 
@@ -183,6 +195,17 @@ function App() {
                             >
                               <h3>{task.title}</h3>
                               <p>{task.description}</p>
+
+                              {/* --- AQUÍ VA EL BOTÓN DE LA HERRAMIENTA 3 (OPCIONAL) --- */}
+                              {/* Solo si quieres el botón "Ver más / Ver menos" */}
+                              <button 
+                                className="btn-expand" 
+                                onClick={() => toggleTask(task.id)}
+                                style={{ border: 'none', background: 'none', color: '#0078d4', cursor: 'pointer', fontSize: '0.8em', padding: 0 }}
+                              >
+                                {expandedTasks[task.id] ? "▲ Menos" : "▼ Más"}
+                              </button>
+
                               <div className="tags">
                                 <span className="tag">📍 {task.node || "N/A"}</span>
                                 <span className="tag" style={{ color: getPriorityColor(task.priority), fontWeight: 'bold' }}>
