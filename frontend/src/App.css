@@ -59,8 +59,8 @@ header {
 /* LAS TARJETAS */
 .task-card {
   background-color: white;
-  padding: 15px;
-  margin-bottom: 15px;
+  padding: 10px;
+  margin-bottom: 10px;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   border-left: 5px solid #0078d4; /* Borde de color a la izquierda */
@@ -73,8 +73,19 @@ header {
 }
 
 .task-card h3 {
-  margin: 0 0 10px 0;
-  font-size: 1.1rem;
+  margin: 0 0 5px 0;
+  font-size: 1rem;
+}
+
+.task-card p {
+  font-size: 0.9rem;       /* Letra un pelín más pequeña */
+  color: #666;             /* Color gris para que no compita con el título */
+  margin: 5px 0;           /* Menos separación arriba y abajo */
+  /* --- Line CLamp --- */
+  display: -webkit-box;    /* Necesario para activar el modo caja flexible antiguo */
+  -webkit-line-clamp: 2;   /* ¿Cuántas líneas mostrar? (prueba con 2 o 3) */
+  -webkit-box-orient: vertical; /* Orientación vertical */
+  overflow: hidden;        /* Esconde lo que sobre */
 }
 
 .tag {
